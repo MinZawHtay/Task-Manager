@@ -21,3 +21,5 @@ daphne
 
 # Environment variables (optional but recommended)
 python-dotenv
+# Database adapter for PostgreSQL (optional, but recommended for production)
+psycopg2
