@@ -217,4 +217,4 @@ def test_notification(request):
 
 
 def google_verify(request):
-    return HttpResponse("google-site-verification: google1234567890abcdef.html")
+    return HttpResponse("google-site-verification: googledc50fba145349c49.html")
