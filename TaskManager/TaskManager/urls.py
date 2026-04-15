@@ -28,7 +28,7 @@ urlpatterns = [
     path('login/', LoginView.as_view(template_name='Tasks/login.html'), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     
-    path("google1234567890abcdef.html", google_verify),
+    path("googledc50fba145349c49.html", google_verify),
 
 ]
 
