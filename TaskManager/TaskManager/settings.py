@@ -15,7 +15,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-2k&8(uf*zzou1snl4f-8f#a#2dsyjup3$p1=h454b9*-%_3ck('
 
 # 🔥 PRODUCTION FIX
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     "task-manager-0894.onrender.com",
