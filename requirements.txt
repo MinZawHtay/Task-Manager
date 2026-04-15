@@ -25,3 +25,5 @@ python-dotenv
 psycopg2
 # Database URL parser (optional, but recommended for production)
 dj-database-url
+
+whitenoise
