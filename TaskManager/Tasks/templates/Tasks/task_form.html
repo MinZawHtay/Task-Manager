@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+
+    <div class="glass-card" style="width: 450px;">
+
+        <!-- TITLE -->
+        <h3 class="text-center mb-3">
+            {% if form.instance.pk %}✏️ Edit Task{% else %}➕ Create Task{% endif %}
+        </h3>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <!-- TITLE -->
+            <label>Title</label>
+            {{ form.title }}
+
+            <br><br>
+
+            <!-- DESCRIPTION -->
+            <label>Description</label>
+            {{ form.description }}
+
+            <br><br>
+
+            <!-- DEADLINE -->
+            <label>Deadline</label>
+            {{ form.deadline }}
+
+            <br><br>
+
+            <!-- CATEGORY (MODERN UI FIX) -->
+            <label>Category</label>
+
+            <div class="category-group">
+
+                <label class="category-option work">
+                    <input type="radio" name="category" value="work"
+                        {% if form.instance.category == "work" %}checked{% endif %}>
+                    💼 Work
+                </label>
+
+                <label class="category-option personal">
+                    <input type="radio" name="category" value="personal"
+                        {% if form.instance.category == "personal" or not form.instance.pk %}checked{% endif %}>
+                    🏠 Personal
+                </label>
+
+                <label class="category-option study">
+                    <input type="radio" name="category" value="study"
+                        {% if form.instance.category == "study" %}checked{% endif %}>
+                    📚 Study
+                </label>
+
+            </div>
+
+            <br>
+            <label>Priority</label>
+
+            <div class="priority-group">
+
+                <label class="priority-option high">
+                    <input type="radio" name="priority" value="high"
+                        {% if form.instance.priority == "high" %}checked{% endif %}>
+                    High
+                </label>
+
+                <label class="priority-option medium">
+                    <input type="radio" name="priority" value="medium"
+                        {% if form.instance.priority == "medium" or not form.instance.pk %}checked{% endif %}>
+                    Medium
+                </label>
+
+                <label class="priority-option low">
+                    <input type="radio" name="priority" value="low"
+                        {% if form.instance.priority == "low" %}checked{% endif %}>
+                    Low
+                </label>
+
+            </div>
+
+            <!-- COMPLETED -->
+            <label>
+                {{ form.completed }} Completed
+            </label>
+
+            <br><br>
+
+            <!-- BUTTON -->
+            <button type="submit" class="btn-gradient w-100">
+             Sumit
+            </button>
+
+        </form>
+
+        <!-- BACK -->
+        <a href="{% url 'task_list' %}" class="btn btn-secondary w-100">
+         Back
+    </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+
+    <div class="glass-card" style="width: 450px;">
+
+        <h3 class="mb-3">👤 Profile</h3>
+
+        <!-- FORM -->
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Avatar -->
+            <div class="text-center">
+                {% if profile.avatar %}
+                    <img src="{{ profile.avatar.url }}" width="90" height="90"
+                        style="border-radius: 50%; object-fit: cover;">
+                {% else %}
+                    <img src="{% static 'images/default.png' %}" width="90" height="90"
+                        style="border-radius: 50%; object-fit: cover;">
+                {% endif %}
+            </div>
+
+            <br>
+
+            <input type="file" name="avatar" class="glass-input">
+            <br><br>
+
+            <!-- Full Name -->
+            <label>Full Name</label>
+            <input type="text" name="full_name" class="glass-input"
+                   value="{{ profile.full_name }}" placeholder="Your name">
+            <br><br>
+
+            <!-- Username (readonly) -->
+            <label>Username</label>
+            <input type="text" class="glass-input"
+                   value="{{ user.username }}" readonly>
+            <br><br>
+
+            <!-- Email -->
+            <label>Email</label>
+            <input type="email" name="email" class="glass-input"
+                   value="{{ user.email }}" placeholder="Your email">
+            <br><br>
+
+            <!-- Bio -->
+            <label>Bio</label>
+            <textarea name="bio" class="glass-input" rows="3">{{ profile.bio }}</textarea>
+            <br><br>
+
+            <!-- Theme -->
+            <label>Theme</label>
+            <select name="theme" class="glass-input">
+                <option value="light" {% if profile.theme == "light" %}selected{% endif %}>Light</option>
+                <option value="dark" {% if profile.theme == "dark" %}selected{% endif %}>Dark</option>
+            </select>
+
+            <br><br>
+
+            <!-- SAVE BUTTON -->
+            <button type="submit" class="btn-gradient w-100">
+                💾 Save Changes
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

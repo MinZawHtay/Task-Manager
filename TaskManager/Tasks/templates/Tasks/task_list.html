@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- HEADER -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+
+    <h2 class="d-flex align-items-center gap-2">
+        <img src="{% static 'images/dashboard.png' %}" width="28" height="28">
+        Task Dashboard
+    </h2>
+
+    <a href="{% url 'task_create' %}" class="btn-glass">
+        Add Task
+    </a>
+
+</div>
+
+<!-- SEARCH -->
+<form method="GET" class="glass-search mb-3">
+    <div class="search-box">
+
+        <input type="text"
+               name="q"
+               value="{{ query }}"
+               placeholder="Search tasks..."
+               class="search-input">
+
+        <button class="search-btn">Search</button>
+
+    </div>
+</form>
+
+<!-- 🔴 OVERDUE NOTIFICATION -->
+{% if overdue_tasks %}
+<div class="alert alert-danger mb-3">
+
+    <strong>Overdue Tasks</strong>
+
+    {% for task in overdue_tasks %}
+        <div class="d-flex justify-content-between align-items-center mt-2">
+
+            <span>{{ task.title }}</span>
+
+            {% if task.priority == "medium" or task.priority == "low" %}
+                <form method="POST" action="{% url 'reschedule_task' task.id %}">
+                    {% csrf_token %}
+                    <button class="btn btn-sm btn-warning">
+                        Move to Tomorrow
+                    </button>
+                </form>
+            {% else %}
+                <span class="text-muted">Auto moved</span>
+            {% endif %}
+
+        </div>
+    {% endfor %}
+
+</div>
+
+<script>
+if (Notification.permission === "granted") {
+    new Notification("Overdue Tasks", {
+        body: "You have overdue tasks!"
+    });
+}
+</script>
+{% endif %}
+
+<!-- ⚡ URGENT (DUE IN 1 HOUR) -->
+{% if urgent_tasks %}
+<div class="alert alert-warning mb-3">
+    You have tasks due within 1 hour.
+</div>
+
+<script>
+if (Notification.permission === "granted") {
+    new Notification("Urgent Task", {
+        body: "Tasks due within 1 hour!"
+    });
+}
+</script>
+{% endif %}
+
+<!-- HORIZONTAL BOARD -->
+<div class="horizontal-board">
+
+    <!-- TODAY -->
+    <div class="group-column">
+        <h4>Today</h4>
+
+        {% for task in today_tasks %}
+        <a href="{% url 'task_detail' task.id %}" class="task-link">
+            <div class="glass-card task-card mb-2 {{ task.priority }}">
+
+                <h5>{{ task.title }}</h5>
+                <p>{{ task.description }}</p>
+
+                <small>{{ task.deadline }}</small>
+
+                <br>
+
+                {% if task.category == "work" %}
+                    <span class="badge bg-primary">Work</span>
+                {% elif task.category == "personal" %}
+                    <span class="badge bg-success">Personal</span>
+                {% elif task.category == "study" %}
+                    <span class="badge bg-warning text-dark">Study</span>
+                {% endif %}
+
+                {% if task.priority == "high" %}
+                    <span class="badge bg-danger">High</span>
+                {% elif task.priority == "medium" %}
+                    <span class="badge bg-warning text-dark">Medium</span>
+                {% elif task.priority == "low" %}
+                    <span class="badge bg-success">Low</span>
+                {% endif %}
+
+            </div>
+        </a>
+        {% empty %}
+            <p class="text-muted">No tasks</p>
+        {% endfor %}
+    </div>
+
+    <!-- TOMORROW -->
+    <div class="group-column">
+        <h4>Tomorrow</h4>
+
+        {% for task in tomorrow_tasks %}
+        <a href="{% url 'task_detail' task.id %}" class="task-link">
+            <div class="glass-card task-card mb-2 {{ task.priority }}">
+
+                <h5>{{ task.title }}</h5>
+                <p>{{ task.description }}</p>
+
+                <small>{{ task.deadline }}</small>
+
+                <br>
+
+                {% if task.category == "work" %}
+                    <span class="badge bg-primary">Work</span>
+                {% elif task.category == "personal" %}
+                    <span class="badge bg-success">Personal</span>
+                {% elif task.category == "study" %}
+                    <span class="badge bg-warning text-dark">Study</span>
+                {% endif %}
+
+                {% if task.priority == "high" %}
+                    <span class="badge bg-danger">High</span>
+                {% elif task.priority == "medium" %}
+                    <span class="badge bg-warning text-dark">Medium</span>
+                {% elif task.priority == "low" %}
+                    <span class="badge bg-success">Low</span>
+                {% endif %}
+
+            </div>
+        </a>
+        {% empty %}
+            <p class="text-muted">No tasks</p>
+        {% endfor %}
+    </div>
+
+    <!-- LATER -->
+    <div class="group-column">
+        <h4>Later</h4>
+
+        {% for task in later_tasks %}
+        <a href="{% url 'task_detail' task.id %}" class="task-link">
+            <div class="glass-card task-card mb-2 {{ task.priority }}">
+
+                <h5>{{ task.title }}</h5>
+                <p>{{ task.description }}</p>
+
+                <small>{{ task.deadline }}</small>
+
+                <br>
+
+                {% if task.category == "work" %}
+                    <span class="badge bg-primary">Work</span>
+                {% elif task.category == "personal" %}
+                    <span class="badge bg-success">Personal</span>
+                {% elif task.category == "study" %}
+                    <span class="badge bg-warning text-dark">Study</span>
+                {% endif %}
+
+                {% if task.priority == "high" %}
+                    <span class="badge bg-danger">High</span>
+                {% elif task.priority == "medium" %}
+                    <span class="badge bg-warning text-dark">Medium</span>
+                {% elif task.priority == "low" %}
+                    <span class="badge bg-success">Low</span>
+                {% endif %}
+
+            </div>
+        </a>
+        {% empty %}
+            <p class="text-muted">No tasks</p>
+        {% endfor %}
+    </div>
+
+</div>
+
+{% endblock %}

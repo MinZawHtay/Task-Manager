@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+
+    <div class="glass-card text-center" style="max-width: 450px; width: 100%;">
+
+        <h3>⚠️ Delete Task</h3>
+
+        <p class="mt-3">
+            Are you sure you want to delete
+            <strong>"{{ task.title }}"</strong>?
+        </p>
+
+        <p style="opacity: 0.7; font-size: 14px;">
+            This action cannot be undone.
+        </p>
+
+        <form method="POST" class="mt-4">
+            {% csrf_token %}
+
+            <button type="submit" class="btn btn-danger w-100">
+                Yes, Delete
+            </button>
+        </form>
+
+        <a href="{% url 'task_list' %}" class="btn-glass mt-3 d-block">
+            Cancel
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

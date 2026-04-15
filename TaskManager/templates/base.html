@@ -1,0 +1,188 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Task Manager</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+<!-- 🌐 NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+
+    <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'task_list' %}">
+        <img src="{% static 'images/daily-tasks.png' %}" width="30" height="30">
+        <span>Task Manager</span>
+    </a>
+
+    <div class="ms-auto d-flex align-items-center gap-3">
+
+        {% if user.is_authenticated %}
+
+        <!-- 🔔 NOTIFICATION BELL -->
+        <div class="position-relative me-2" style="cursor:pointer;">
+            <span style="font-size:20px;">🔔</span>
+
+            <span id="notifCount"
+                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                0
+            </span>
+        </div>
+
+        <!-- 👤 PROFILE DROPDOWN -->
+        <div class="dropdown">
+
+            <a class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+               href="#"
+               role="button"
+               data-bs-toggle="dropdown">
+
+                {% if user.profile.avatar %}
+                    <img src="{{ user.profile.avatar.url }}"
+                         width="35" height="35"
+                         style="border-radius:50%; object-fit:cover;">
+                {% else %}
+                    <img src="{% static 'images/default.png' %}"
+                         width="35" height="35"
+                         style="border-radius:50%; object-fit:cover;">
+                {% endif %}
+
+                <span class="ms-2">
+                    {{ user.profile.full_name|default:user.username }}
+                </span>
+
+            </a>
+
+            <ul class="dropdown-menu dropdown-menu-end">
+
+                <li>
+                    <a class="dropdown-item" href="{% url 'profile' %}">
+                        Profile
+                    </a>
+                </li>
+
+                <li>
+                    <button class="dropdown-item" onclick="toggleDark()" id="themeToggleBtn">
+                        Dark Mode
+                    </button>
+                </li>
+
+                <li><hr class="dropdown-divider"></li>
+
+                <li>
+                    <form method="POST" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button class="dropdown-item text-danger">
+                            Logout
+                        </button>
+                    </form>
+                </li>
+
+            </ul>
+        </div>
+
+        {% else %}
+            <a href="{% url 'login' %}" class="btn btn-primary btn-sm">
+                Login
+            </a>
+        {% endif %}
+
+    </div>
+</nav>
+
+<!-- 📦 PAGE CONTENT -->
+<div class="container mt-4">
+    {% block content %}{% endblock %}
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- ========================= -->
+<!-- 🌙 THEME SYSTEM -->
+<!-- ========================= -->
+<script>
+function applyTheme(theme) {
+    const btn = document.getElementById("themeToggleBtn");
+
+    if (theme === "dark") {
+        document.body.classList.add("dark-mode");
+        if (btn) btn.innerText = "Light Mode";
+    } else {
+        document.body.classList.remove("dark-mode");
+        if (btn) btn.innerText = "Dark Mode";
+    }
+}
+
+function toggleDark() {
+    let isDark = document.body.classList.toggle("dark-mode");
+    let theme = isDark ? "dark" : "light";
+    localStorage.setItem("theme", theme);
+    applyTheme(theme);
+}
+
+window.onload = function () {
+    let saved = localStorage.getItem("theme");
+
+    if (saved) {
+        applyTheme(saved);
+    } else {
+        let systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        applyTheme(systemDark ? "dark" : "light");
+    }
+};
+</script>
+
+<!-- ========================= -->
+<!-- 🔔 NOTIFICATIONS SYSTEM -->
+<!-- ========================= -->
+<script>
+function notify(title, message) {
+    if (Notification.permission === "granted") {
+        new Notification(title, {
+            body: message,
+            icon: "/static/images/dashboard.png"
+        });
+    }
+}
+
+if (Notification.permission !== "granted") {
+    Notification.requestPermission();
+}
+
+// 🔥 WebSocket (LIVE)
+const socket = new WebSocket("ws://127.0.0.1:8000/ws/notifications/");
+
+socket.onmessage = function(event) {
+    const data = JSON.parse(event.data);
+
+    notify(data.title, data.message);
+    updateBell();
+};
+
+// 🔔 Bell counter + sound + vibration
+function updateBell() {
+    let count = document.getElementById("notifCount");
+
+    count.innerText = parseInt(count.innerText) + 1;
+
+    // sound
+    let audio = new Audio("/static/sound/alert.mp3");
+    audio.play();
+
+    // vibration
+    if (navigator.vibrate) {
+        navigator.vibrate(200);
+    }
+}
+</script>
+
+</body>
+</html>

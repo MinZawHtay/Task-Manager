@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+
+    <div class="glass-card" style="width: 400px;">
+
+        <h3 class="text-center mb-2">📝 Create Account</h3>
+        <p class="text-center mb-4" style="opacity: 0.8;">Join Task Manager</p>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <!-- Full Name -->
+            <div class="mb-3">
+                <label>Full Name</label>
+                <input type="text" name="full_name" class="glass-input" placeholder="Your name">
+            </div>
+
+            <!-- Username -->
+            <div class="mb-3">
+                <label>Username</label>
+                <input type="text" name="username" class="glass-input" placeholder="Username" required>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+                <label>Email</label>
+                <input type="email" name="email" class="glass-input" placeholder="Email">
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+                <label>Password</label>
+                <input type="password" name="password1" class="glass-input" required>
+            </div>
+
+            <!-- Confirm -->
+            <div class="mb-3">
+                <label>Confirm Password</label>
+                <input type="password" name="password2" class="glass-input" required>
+            </div>
+
+            <button type="submit" class="btn-gradient w-100">
+                🚀 Sign Up
+            </button>
+
+        </form>
+
+        <p class="text-center mt-3">
+            Already have an account?
+            <a href="{% url 'login' %}" style="color: #fff;">Login</a>
+        </p>
+
+    </div>
+
+</div>
+
+{% endblock %}

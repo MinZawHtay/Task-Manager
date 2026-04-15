@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+
+    <div class="glass-card" style="width: 500px;">
+
+        <!-- TITLE -->
+        <h3>{{ task.title }}</h3>
+
+        <!-- DESCRIPTION -->
+        <p>{{ task.description }}</p>
+
+        <!-- DEADLINE -->
+        <p>{{ task.deadline }}</p>
+
+        <!-- CATEGORY -->
+        <div class="mb-2">
+            {% if task.category == "work" %}
+                <span class="badge bg-primary">Work</span>
+            {% elif task.category == "personal" %}
+                <span class="badge bg-success">Personal</span>
+            {% elif task.category == "study" %}
+                <span class="badge bg-warning text-dark">Study</span>
+            {% endif %}
+        </div>
+
+        <!-- PRIORITY (NEW) -->
+        <div class="mb-2">
+            {% if task.priority == "high" %}
+                <span class="badge bg-danger">High Priority</span>
+            {% elif task.priority == "medium" %}
+                <span class="badge bg-warning text-dark">Medium Priority</span>
+            {% elif task.priority == "low" %}
+                <span class="badge bg-success">Low Priority</span>
+            {% endif %}
+        </div>
+
+        <!-- STATUS -->
+        <div class="mb-3">
+            {% if task.completed %}
+                <span class="badge bg-success">Completed</span>
+            {% else %}
+                <span class="badge bg-secondary">Pending</span>
+            {% endif %}
+        </div>
+
+        <hr>
+
+        <!-- ACTIONS -->
+        <div class="d-flex justify-content-between">
+
+            <a href="{% url 'task_update' task.id %}" class="btn-glass">
+                Edit
+            </a>
+
+            <a href="{% url 'task_delete' task.id %}" class="btn-glass">
+                Delete
+            </a>
+
+        </div>
+
+        <br>
+
+        <!-- BACK BUTTON -->
+        <a href="{% url 'task_list' %}" class="btn-back">
+            Back
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}
