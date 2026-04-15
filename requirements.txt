@@ -1,0 +1,23 @@
+Django>=5.0,<6.0
+
+# Django REST / utilities (optional but commonly used)
+djangorestframework
+
+# Authentication & security helpers
+django-widget-tweaks
+
+# Image handling (profile avatar)
+Pillow
+
+# WebSockets (REAL-TIME notifications)
+channels>=4.0
+channels-redis>=4.1
+
+# Redis client (for caching / channel layer support)
+redis
+
+# Production server (optional but recommended)
+gunicorn
+
+# Environment variables (optional but recommended)
+python-dotenv
